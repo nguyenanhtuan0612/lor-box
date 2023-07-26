@@ -8,7 +8,7 @@ interface Props {
 
 export default function FaIconButton(props: Props) {
   return (
-    <div className="px-5 hover:bg-gray-800 flex items-center justify-center h-14">
+    <div className="w-12 hover:bg-gray-700 flex items-center justify-center h-12 hover:rounded-md">
       <FontAwesomeIcon icon={props.icon} size="lg" />
     </div>
   );
