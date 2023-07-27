@@ -6,7 +6,7 @@ export default function InputSearch() {
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <FontAwesomeIcon icon={faSearch} size="lg" />
+        <FontAwesomeIcon icon={faSearch} size="lg" color="white" />
       </div>
       <div className="flex items-center h-12">
         <input
