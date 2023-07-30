@@ -1,7 +1,13 @@
 import Counter from '@/components/atoms/DeckItem/Counter';
+import InputSearchCard from '@/components/atoms/input/InputSearchCard';
+import SubtypeSelect from '@/components/atoms/select/SubtypeSelect';
+import CardTypeCircleBtnList from '@/components/molecules/mainBody/CardTypeCircleBtnList';
 import CounterChart from '@/components/molecules/mainBody/CounterChart';
+import FormatCircleBtnList from '@/components/molecules/mainBody/FormatCircleBtnList';
 import ListCardDeck from '@/components/molecules/mainBody/ListCardDeck';
-import React from 'react';
+import ManaFilterBtnList from '@/components/molecules/mainBody/ManaFilterBtnList';
+import RarityBtnList from '@/components/molecules/mainBody/RarityBtnList';
+import RegionCircleBtnList from '@/components/molecules/mainBody/RegionCircleBtnList';
 
 export default function MainBody() {
   return (
@@ -13,7 +19,7 @@ export default function MainBody() {
           <div className="px-4 py-6 w-full h-full ">
             <div className="bg-gray-800/[.8] w-full h-full rounded-lg flex flex-col">
               <div className="flex px-4 py-4 text-2xl font-semibold">
-                <span>Bộ bài</span>
+                <span className="text-white">Bộ bài</span>
               </div>
               <div className="flex px-4 justify-between">
                 <Counter num={0} total={2} type="champion" />
@@ -33,8 +39,32 @@ export default function MainBody() {
           </div>
         </div>
         <div className=" w-9/12">
-          <div>filter</div>
-          <div>card</div>
+          <div className="pr-4 py-6 w-full h-full">
+            {/* Filter */}
+            <div className="flex">
+              <InputSearchCard />
+              <div className="ml-4">
+                <RegionCircleBtnList />
+              </div>
+            </div>
+            <div className="flex mt-2">
+              <SubtypeSelect />
+              <div className="ml-4">
+                <ManaFilterBtnList />
+              </div>
+            </div>
+            <div className="flex mt-2">
+              <RarityBtnList />
+              <div className="ml-16">
+                <CardTypeCircleBtnList />
+              </div>
+              <div className="ml-14">
+                <FormatCircleBtnList />
+              </div>
+            </div>
+            {/* Card */}
+            <div></div>
+          </div>
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@ export default function Counter(props: Props) {
 
   return (
     <div>
-      <div className="flex items-center justify-center">{counter()}</div>
+      <div className="flex items-center justify-center text-white">{counter()}</div>
       <div className="flex items-center justify-center">
         <Image alt="icon-deck" width={24} height={24} src={listIcon[props.type]}></Image>
       </div>
