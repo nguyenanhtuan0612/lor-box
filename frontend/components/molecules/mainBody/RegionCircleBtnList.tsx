@@ -4,7 +4,7 @@ import React from 'react';
 export default function RegionCircleBtnList() {
   return (
     <div className="flex h-full items-center gap-2">
-      <RegionCircleButton icon="iconAll" active={true} />
+      {/* <RegionCircleButton icon="iconAll" active={true} /> */}
       <RegionCircleButton icon="iconBandlecity" active={false} />
       <RegionCircleButton icon="iconBilgewater" active={false} />
       <RegionCircleButton icon="iconDemacia" active={false} />

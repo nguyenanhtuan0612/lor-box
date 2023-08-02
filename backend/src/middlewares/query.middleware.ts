@@ -69,9 +69,9 @@ const generateOrder = (order: Order) => {
 export class QueryMiddleware implements NestMiddleware {
     async use(req: RequestWithOptions, res: Response, next: NextFunction) {
         try {
-            const { limit, offset, filter, order } = req.query;
+            const { limit, start, filter, order } = req.query;
             const options: Options = {
-                offset: Number(offset) || 0,
+                offset: Number(start) || 0,
                 limit: Number(limit) || 10,
                 where: {},
                 order: [],
