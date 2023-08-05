@@ -1,29 +1,43 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import champion from '@/public/img/rarity/champion.png';
-import epic from '@/public/img/rarity/epic.png';
-import rare from '@/public/img/rarity/rare.png';
-import common from '@/public/img/rarity/common.png';
+import Champion from '@/public/img/rarity/champion.png';
+import Epic from '@/public/img/rarity/epic.png';
+import Rare from '@/public/img/rarity/rare.png';
+import Common from '@/public/img/rarity/common.png';
 
 interface Props {
   active: boolean;
-  icon: 'champion' | 'epic' | 'rare' | 'common';
+  icon: 'Champion' | 'Epic' | 'Rare' | 'Common';
+  value: string[];
+  setValue: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function RarityButton(props: Props) {
   const listIcon = {
-    champion,
-    epic,
-    rare,
-    common,
+    Champion,
+    Epic,
+    Rare,
+    Common,
   };
   const [active, setActive] = useState(props.active);
 
   return (
     <div
       onClick={() => {
+        const arr = props.value;
+        if (active) {
+          const index = arr.indexOf(props.icon);
+          if (index !== -1) {
+            const temp = arr.filter(function (e) {
+              return e !== props.icon;
+            });
+            props.setValue(temp);
+          }
+        } else {
+          props.setValue([...arr, props.icon]);
+        }
         setActive(!active);
       }}
       className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${

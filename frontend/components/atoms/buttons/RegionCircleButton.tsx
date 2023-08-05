@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import iconAll from '@/public/img/regions/icon-all.png';
 import iconBandlecity from '@/public/img/regions/icon-bandlecity.png';
 import iconBilgewater from '@/public/img/regions/icon-bilgewater.png';
@@ -30,6 +30,8 @@ interface Props {
     | 'iconShadowisles'
     | 'iconShurima'
     | 'iconTargon';
+  value: string[];
+  setValue: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function RegionCircleButton(props: Props) {
@@ -47,12 +49,38 @@ export default function RegionCircleButton(props: Props) {
     iconShurima,
     iconTargon,
   };
+  const listRegionRef = {
+    iconAll: 'All',
+    iconBandlecity: 'BandleCity',
+    iconBilgewater: 'Bilgewater',
+    iconDemacia: 'Demacia',
+    iconFreljord: 'Freljord',
+    iconIonia: 'Ionia',
+    iconNoxus: 'Noxus',
+    iconPiltoverzaun: 'PiltoverZaun',
+    iconRuneterra: 'Runeterra',
+    iconShadowisles: 'ShadowIsles',
+    iconShurima: 'Shurima',
+    iconTargon: 'Targon',
+  };
 
   const [active, setActive] = useState(props.active);
 
   return (
     <div
       onClick={() => {
+        const arr = props.value;
+        if (active) {
+          const index = arr.indexOf(listRegionRef[props.icon]);
+          if (index !== -1) {
+            const temp = arr.filter(function (e) {
+              return e !== listRegionRef[props.icon];
+            });
+            props.setValue(temp);
+          }
+        } else {
+          props.setValue([...arr, listRegionRef[props.icon]]);
+        }
         setActive(!active);
       }}
       className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${

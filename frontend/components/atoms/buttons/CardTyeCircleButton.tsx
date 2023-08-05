@@ -1,7 +1,7 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import equipment from '@/public/img/svg/icon-equipment.svg';
 import champion from '@/public/img/svg/icon-champion.svg';
 import spell from '@/public/img/svg/icon-spell.svg';
@@ -12,6 +12,8 @@ import card from '@/public/img/svg/icon-card.svg';
 interface Props {
   active: boolean;
   icon: 'equipment' | 'spell' | 'unit' | 'landmark';
+  value: string[];
+  setValue: Dispatch<SetStateAction<string[]>>;
 }
 
 export default function CardTyeCircleButton(props: Props) {
@@ -22,11 +24,30 @@ export default function CardTyeCircleButton(props: Props) {
     landmark,
   };
 
+  const listTypeStr = {
+    equipment: 'Trang Bị',
+    spell: 'Bài phép',
+    unit: 'Bài quân',
+    landmark: 'Địa Danh',
+  };
+
   const [active, setActive] = useState(props.active);
 
   return (
     <div
       onClick={() => {
+        const arr = props.value;
+        if (active) {
+          const index = arr.indexOf(listTypeStr[props.icon]);
+          if (index !== -1) {
+            const temp = arr.filter(function (e) {
+              return e !== listTypeStr[props.icon];
+            });
+            props.setValue(temp);
+          }
+        } else {
+          props.setValue([...arr, listTypeStr[props.icon]]);
+        }
         setActive(!active);
       }}
       className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${

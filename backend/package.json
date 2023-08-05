@@ -36,6 +36,7 @@
         "cross-env": "^7.0.3",
         "decompress": "^4.2.1",
         "jsonwebtoken": "^8.5.1",
+        "lor-deckcodes-ts": "^1.1.0",
         "pg": "^8.8.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",

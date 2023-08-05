@@ -31,10 +31,10 @@ const generateWhere = (filter: Filter) => {
             return { [prop]: { [Op.gte]: value } };
         }
         case 'like': {
-            return { [prop]: { [Op.like]: value } };
+            return { [prop]: { [Op.like]: `%${value}%` } };
         }
         case 'iLike': {
-            return { [prop]: { [Op.iLike]: value } };
+            return { [prop]: { [Op.iLike]: `%${value}%` } };
         }
         case 'in': {
             if (!Array.isArray(value)) {
@@ -53,6 +53,16 @@ const generateWhere = (filter: Filter) => {
                 return { [prop]: { [Op.contains]: [value] } };
             }
             return { [prop]: { [Op.contains]: value } };
+        }
+        case 'orContains': {
+            if (!Array.isArray(value)) {
+                return { [prop]: { [Op.contains]: [value] } };
+            }
+            const or = [];
+            for (const iterator of value) {
+                or.push({ [Op.contains]: [iterator] });
+            }
+            return { [prop]: { [Op.or]: or } };
         }
         default: {
             return { [prop]: value };

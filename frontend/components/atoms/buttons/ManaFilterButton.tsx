@@ -1,10 +1,12 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface Props {
   active: boolean;
   cost: string;
+  value: number[];
+  setValue: Dispatch<SetStateAction<number[]>>;
 }
 
 export default function ManaFilterButton(props: Props) {
@@ -13,6 +15,19 @@ export default function ManaFilterButton(props: Props) {
   return (
     <div
       onClick={() => {
+        const cost = parseInt(props.cost);
+        const arr = props.value;
+        if (active) {
+          const index = arr.indexOf(cost);
+          if (index !== -1) {
+            const temp = arr.filter(function (e) {
+              return e !== cost;
+            });
+            props.setValue(temp);
+          }
+        } else {
+          props.setValue([...arr, cost]);
+        }
         setActive(!active);
       }}
       className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${
