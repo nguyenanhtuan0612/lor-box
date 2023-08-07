@@ -1,12 +1,12 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import standard from '@/public/img/formats/queue_select_standard_toggle_active.png';
 import eternal from '@/public/img/formats/queue_select_eternal_toggle_active.png';
+import { Tooltip } from 'react-tooltip';
 
 interface Props {
-  active: boolean;
   icon: 'standard' | 'eternal';
   value: string[];
   setValue: Dispatch<SetStateAction<string[]>>;
@@ -18,11 +18,27 @@ export default function FormatCircleButton(props: Props) {
     eternal: 'client_Formats_Eternal_name',
     standard: 'client_Formats_Standard_name',
   };
+  const listFormatStrDisplay = {
+    eternal: 'Chế độ vô hạn',
+    standard: 'Chế độ tiêu chuẩn',
+  };
 
-  const [active, setActive] = useState(props.active);
+  const [active, setActive] = useState(false);
+
+  function checkActive() {
+    const arr = props.value;
+    return arr.includes(listFormatStr[props.icon]);
+  }
+
+  useEffect(() => {
+    setActive(checkActive());
+  }, [props.value]);
 
   return (
     <div
+      data-tooltip-id="tooltip"
+      data-tooltip-content={listFormatStrDisplay[props.icon]}
+      data-tooltip-place="top-start"
       onClick={() => {
         const arr = props.value;
         if (active) {
@@ -46,6 +62,7 @@ export default function FormatCircleButton(props: Props) {
       <div className="w-8 h-8">
         <Image src={listIcon[props.icon]} alt="icon-regions" />
       </div>
+      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99 / .8)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </div>
   );
 }

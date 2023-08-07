@@ -11,10 +11,10 @@ export default function CardTypeCircleBtnList(props: Props) {
     <div className="ml-2 h-fit">
       <span className="text-sm text-gray-300">Loại thẻ bài:</span>
       <div className="flex items-center gap-2">
-        <CardTyeCircleButton value={props.value} setValue={props.setValue} active={false} icon="unit" />
-        <CardTyeCircleButton value={props.value} setValue={props.setValue} active={false} icon="spell" />
-        <CardTyeCircleButton value={props.value} setValue={props.setValue} active={false} icon="landmark" />
-        <CardTyeCircleButton value={props.value} setValue={props.setValue} active={false} icon="equipment" />
+        <CardTyeCircleButton value={props.value} setValue={props.setValue} icon="unit" />
+        <CardTyeCircleButton value={props.value} setValue={props.setValue} icon="spell" />
+        <CardTyeCircleButton value={props.value} setValue={props.setValue} icon="landmark" />
+        <CardTyeCircleButton value={props.value} setValue={props.setValue} icon="equipment" />
       </div>
     </div>
   );

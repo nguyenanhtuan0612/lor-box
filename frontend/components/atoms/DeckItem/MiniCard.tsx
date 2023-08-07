@@ -5,7 +5,7 @@ interface Props {
   name: string;
   cost: number;
   count: number;
-  img: StaticImageData;
+  img: string;
   color: string;
 }
 
@@ -19,7 +19,9 @@ export default function MiniCard(props: Props) {
             background: `linear-gradient(to right, ${props.color} 30%, ${props.color + '00'} 70%)`,
           }}
         ></div>
-        <Image src={props.img} alt="bg-mini-card" className="float-right h-full" />
+        <div className="flex h-full w-9/12 float-right justify-end items-center">
+          <Image src={props.img} alt="bg-mini-card" width={0} height={0} sizes="10vw" style={{ width: '100%', height: 'auto' }} className="" />
+        </div>
       </div>
 
       <div className="flex items-center h-full w-full">

@@ -2,9 +2,10 @@ import Card from '@/components/atoms/Card/Card';
 import { backendUrl } from '@/constants/env';
 import { operator } from '@/constants/filterOperator';
 import { ICard } from '@/interface/card';
+import { ICardInDeck } from '@/interface/cardInDeck';
 import { Filter } from '@/interface/filter';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface Props {
@@ -17,6 +18,8 @@ interface Props {
   cost: number[];
   format: string[];
   region: string[];
+  deck: ICardInDeck[];
+  setDeck: Dispatch<SetStateAction<ICardInDeck[]>>;
 }
 
 export default function CardList(props: Props) {
@@ -120,7 +123,7 @@ export default function CardList(props: Props) {
           scrollThreshold={0.95}
         >
           {cards.map((data, i) => {
-            return <Card key={i} img={data.gameAbsolutePath} numInDeck={0} />;
+            return <Card key={i} card={data} deck={props.deck} setDeck={props.setDeck} listCard={cards} />;
           })}
         </InfiniteScroll>
       ) : (

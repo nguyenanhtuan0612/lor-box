@@ -1,26 +1,19 @@
 import MiniCard from '@/components/atoms/DeckItem/MiniCard';
-import React from 'react';
-import bg from '@/public/img/01PZ027.png';
-import { count } from 'console';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ICardInDeck } from '@/interface/cardInDeck';
 
-const data = [
-  { name: 'Chùm Sáng Nhiệt Năng', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Phát Bắn Thần Bí', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Cầu Sấm', cost: 6, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-  { name: 'Temmo', cost: 1, count: 2, img: bg, color: '#E29E76' },
-];
+interface Props {
+  deck: ICardInDeck[];
+  setDeck: Dispatch<SetStateAction<ICardInDeck[]>>;
+}
 
-export default function ListCardDeck() {
+export default function ListCardDeck(props: Props) {
+  const [data, setData] = useState<ICardInDeck[]>([]);
+
+  useEffect(() => {
+    setData(props.deck);
+  }, [props.deck]);
+
   return (
     <div className="h-full w-full rounded-lg border border-gray-500 overflow-scroll no-scrollbar p-1">
       {data.map((node, i) => {

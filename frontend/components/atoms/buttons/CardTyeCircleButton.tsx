@@ -1,16 +1,14 @@
+import equipment from '@/public/img/svg/icon-equipment.svg';
+import landmark from '@/public/img/svg/icon-landmark.svg';
+import spell from '@/public/img/svg/icon-spell.svg';
+import unit from '@/public/img/svg/icon-unit.svg';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import equipment from '@/public/img/svg/icon-equipment.svg';
-import champion from '@/public/img/svg/icon-champion.svg';
-import spell from '@/public/img/svg/icon-spell.svg';
-import unit from '@/public/img/svg/icon-unit.svg';
-import landmark from '@/public/img/svg/icon-landmark.svg';
-import card from '@/public/img/svg/icon-card.svg';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Tooltip } from 'react-tooltip';
 
 interface Props {
-  active: boolean;
   icon: 'equipment' | 'spell' | 'unit' | 'landmark';
   value: string[];
   setValue: Dispatch<SetStateAction<string[]>>;
@@ -31,10 +29,22 @@ export default function CardTyeCircleButton(props: Props) {
     landmark: 'Địa Danh',
   };
 
-  const [active, setActive] = useState(props.active);
+  const [active, setActive] = useState(false);
+
+  function checkActive() {
+    const arr = props.value;
+    return arr.includes(listTypeStr[props.icon]);
+  }
+
+  useEffect(() => {
+    setActive(checkActive());
+  }, [props.value]);
 
   return (
     <div
+      data-tooltip-id="tooltip"
+      data-tooltip-content={listTypeStr[props.icon]}
+      data-tooltip-place="top-start"
       onClick={() => {
         const arr = props.value;
         if (active) {
@@ -56,6 +66,7 @@ export default function CardTyeCircleButton(props: Props) {
     >
       {active ? <FontAwesomeIcon icon={faCheck} className="absolute -right-0.5 -top-0.5 text-green-600" /> : <></>}
       <Image src={listIcon[props.icon]} alt="icon-regions" height={28} />
+      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99 / .8)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </div>
   );
 }

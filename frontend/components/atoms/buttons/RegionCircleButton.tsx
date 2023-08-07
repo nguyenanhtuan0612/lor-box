@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import iconAll from '@/public/img/regions/icon-all.png';
 import iconBandlecity from '@/public/img/regions/icon-bandlecity.png';
 import iconBilgewater from '@/public/img/regions/icon-bilgewater.png';
@@ -14,9 +14,9 @@ import iconShurima from '@/public/img/regions/icon-shurima.png';
 import iconTargon from '@/public/img/regions/icon-targon.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Tooltip } from 'react-tooltip';
 
 interface Props {
-  active: boolean;
   icon:
     | 'iconAll'
     | 'iconBandlecity'
@@ -64,10 +64,22 @@ export default function RegionCircleButton(props: Props) {
     iconTargon: 'Targon',
   };
 
-  const [active, setActive] = useState(props.active);
+  const [active, setActive] = useState(false);
+
+  function checkActive() {
+    const arr = props.value;
+    return arr.includes(listRegionRef[props.icon]);
+  }
+
+  useEffect(() => {
+    setActive(checkActive());
+  }, [props.value]);
 
   return (
     <div
+      data-tooltip-id="tooltip"
+      data-tooltip-content={listRegionRef[props.icon]}
+      data-tooltip-place="top-start"
       onClick={() => {
         const arr = props.value;
         if (active) {
@@ -91,6 +103,7 @@ export default function RegionCircleButton(props: Props) {
       <div className="w-8 h-8">
         <Image src={listIcon[props.icon]} alt="icon-regions" />
       </div>
+      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99 / .8)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </div>
   );
 }

@@ -11,8 +11,8 @@ export default function FormatCircleBtnList(props: Props) {
     <div className="h-fit">
       <span className="text-sm text-gray-300">Chế độ chơi:</span>
       <div className="flex items-center gap-2">
-        <FormatCircleButton value={props.value} setValue={props.setValue} active={false} icon="standard" />
-        <FormatCircleButton value={props.value} setValue={props.setValue} active={false} icon="eternal" />
+        <FormatCircleButton value={props.value} setValue={props.setValue} icon="standard" />
+        <FormatCircleButton value={props.value} setValue={props.setValue} icon="eternal" />
       </div>
     </div>
   );

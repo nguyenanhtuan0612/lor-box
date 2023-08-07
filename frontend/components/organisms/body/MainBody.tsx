@@ -1,4 +1,5 @@
 import Counter from '@/components/atoms/DeckItem/Counter';
+import FaIconCircleButton from '@/components/atoms/buttons/FaIconCircleButton';
 import InputSearchCard from '@/components/atoms/input/InputSearchCard';
 import SubtypeSelect from '@/components/atoms/select/SubtypeSelect';
 import CardList from '@/components/molecules/mainBody/CardList';
@@ -11,7 +12,9 @@ import RarityBtnList from '@/components/molecules/mainBody/RarityBtnList';
 import RegionCircleBtnList from '@/components/molecules/mainBody/RegionCircleBtnList';
 import { backendUrl } from '@/constants/env';
 import { operator } from '@/constants/filterOperator';
+import { ICardInDeck } from '@/interface/cardInDeck';
 import { Filter } from '@/interface/filter';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -25,6 +28,8 @@ export default function MainBody() {
   const [cost, setCost] = useState<number[]>([]);
   const [format, setFormat] = useState<string[]>([]);
   const [region, setRegion] = useState<string[]>([]);
+  const [deck, setDeck] = useState<ICardInDeck[]>([]);
+  const [counter, setCounter] = useState({ champion: 0, unit: 0, spell: 0, landmark: 0, equipment: 0, all: 0 });
 
   useEffect(() => {
     async function load() {
@@ -94,6 +99,16 @@ export default function MainBody() {
     load();
   }, [name, subtypes, rarity, type, cost, format, region]);
 
+  function clearFilter() {
+    setName('');
+    setSubtypes('');
+    setRarity([]);
+    setType([]);
+    setCost([]);
+    setFormat([]);
+    setRegion([]);
+  }
+
   return (
     <div className=" absolute h-full w-full">
       <div className="absolute -z-20 bg-[url('https://dd.b.pvp.net/4_7_0/set1/vi_vn/img/cards/01DE012T1-full.png')] h-full w-full bg-cover"></div>
@@ -117,7 +132,7 @@ export default function MainBody() {
                 <CounterChart />
               </div>
               <div className="flex px-4 py-4 justify-between flex-1 overflow-hidden">
-                <ListCardDeck />
+                <ListCardDeck deck={deck} setDeck={setDeck} />
               </div>
             </div>
           </div>
@@ -145,10 +160,18 @@ export default function MainBody() {
               <div className="ml-14">
                 <FormatCircleBtnList value={format} setValue={setFormat} />
               </div>
+              <div className="ml-14 flex items-end">
+                <div className="h-fit ">
+                  <span className="text-sm text-gray-300"></span>
+                  <div className="flex items-center gap-2">
+                    <FaIconCircleButton tooltipMsg="Xóa bộ lọc" icon={faTrash} onClick={clearFilter} />
+                  </div>
+                </div>
+              </div>
             </div>
             {/* Card */}
             <div className="mt-5 flex-1 flex overflow-hidden w-4/5 border-y border-gray-400 py-0.5">
-              <CardList count={count} cards={cards} name={name} subtypes={subtypes} rarity={rarity} type={type} cost={cost} format={format} region={region} />
+              <CardList count={count} cards={cards} name={name} subtypes={subtypes} rarity={rarity} type={type} cost={cost} format={format} region={region} deck={deck} setDeck={setDeck} />
             </div>
           </div>
         </div>

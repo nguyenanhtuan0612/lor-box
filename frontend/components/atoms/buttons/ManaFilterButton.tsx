@@ -1,16 +1,25 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface Props {
-  active: boolean;
   cost: string;
   value: number[];
   setValue: Dispatch<SetStateAction<number[]>>;
 }
 
 export default function ManaFilterButton(props: Props) {
-  const [active, setActive] = useState(props.active);
+  const [active, setActive] = useState(false);
+
+  function checkActive() {
+    const cost = parseInt(props.cost);
+    const arr = props.value;
+    return arr.includes(cost);
+  }
+
+  useEffect(() => {
+    setActive(checkActive());
+  }, [props.value]);
 
   return (
     <div

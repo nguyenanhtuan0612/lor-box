@@ -1,14 +1,14 @@
 import Image from 'next/image';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Champion from '@/public/img/rarity/champion.png';
 import Epic from '@/public/img/rarity/epic.png';
 import Rare from '@/public/img/rarity/rare.png';
 import Common from '@/public/img/rarity/common.png';
+import { Tooltip } from 'react-tooltip';
 
 interface Props {
-  active: boolean;
   icon: 'Champion' | 'Epic' | 'Rare' | 'Common';
   value: string[];
   setValue: Dispatch<SetStateAction<string[]>>;
@@ -21,10 +21,28 @@ export default function RarityButton(props: Props) {
     Rare,
     Common,
   };
-  const [active, setActive] = useState(props.active);
+  const listIconStrDisplay = {
+    Champion: 'Anh hùng',
+    Epic: 'Sử thi',
+    Rare: 'Hiếm',
+    Common: 'Thường',
+  };
+  const [active, setActive] = useState(false);
+
+  function checkActive() {
+    const arr = props.value;
+    return arr.includes(props.icon);
+  }
+
+  useEffect(() => {
+    setActive(checkActive());
+  }, [props.value]);
 
   return (
     <div
+      data-tooltip-id="tooltip"
+      data-tooltip-content={listIconStrDisplay[props.icon]}
+      data-tooltip-place="top-start"
       onClick={() => {
         const arr = props.value;
         if (active) {
@@ -46,6 +64,7 @@ export default function RarityButton(props: Props) {
     >
       {active ? <FontAwesomeIcon icon={faCheck} className="absolute -right-0.5 -top-0.5 text-green-600" /> : <></>}
       <Image src={listIcon[props.icon]} alt="icon-regions" height={32} />
+      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99 / .8)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </div>
   );
 }
