@@ -3,7 +3,9 @@ import { backendUrl } from '@/constants/env';
 import { operator } from '@/constants/filterOperator';
 import { ICard } from '@/interface/card';
 import { ICardInDeck } from '@/interface/cardInDeck';
+import { ICounter } from '@/interface/counter';
 import { Filter } from '@/interface/filter';
+import { IManaCounter } from '@/interface/manaCounter';
 import axios from 'axios';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -20,6 +22,10 @@ interface Props {
   region: string[];
   deck: ICardInDeck[];
   setDeck: Dispatch<SetStateAction<ICardInDeck[]>>;
+  counter: ICounter;
+  setCounter: Dispatch<SetStateAction<ICounter>>;
+  manaCounter: IManaCounter;
+  setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
 }
 
 export default function CardList(props: Props) {
@@ -31,7 +37,7 @@ export default function CardList(props: Props) {
   const [type, setType] = useState<string[]>([]);
   const [cost, setCost] = useState<number[]>([]);
   const [format, setFormat] = useState<string[]>([]);
-  const [region, setRegion] = useState<string[]>([]);
+  const [region, setRegion] = useState<string[]>(['client_Formats_Standard_name']);
 
   useEffect(() => {
     setCards(props.cards);
@@ -123,7 +129,19 @@ export default function CardList(props: Props) {
           scrollThreshold={0.95}
         >
           {cards.map((data, i) => {
-            return <Card key={i} card={data} deck={props.deck} setDeck={props.setDeck} listCard={cards} />;
+            return (
+              <Card
+                key={i}
+                card={data}
+                deck={props.deck}
+                setDeck={props.setDeck}
+                listCard={cards}
+                counter={props.counter}
+                setCounter={props.setCounter}
+                manaCounter={props.manaCounter}
+                setManaCounter={props.setManaCounter}
+              />
+            );
           })}
         </InfiniteScroll>
       ) : (

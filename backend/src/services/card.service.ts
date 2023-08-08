@@ -6,8 +6,6 @@ import { Injectable } from '@nestjs/common';
 export class CardService {
     async listCardCanCollectible(options: Options) {
         options.where = Object.assign(options.where, { collectible: true });
-        console.log(options.where);
-
         const data = await Card.findAndCountAll(options);
 
         return data;

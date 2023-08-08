@@ -4,12 +4,18 @@ import placeHolder from '@/public/img/card-placeholder.png';
 import { ICardInDeck } from '@/interface/cardInDeck';
 import { ICard } from '@/interface/card';
 import _ from 'lodash';
+import { ICounter } from '@/interface/counter';
+import { IManaCounter } from '@/interface/manaCounter';
 
 interface Props {
   card: ICard;
   deck: ICardInDeck[];
   setDeck: Dispatch<SetStateAction<ICardInDeck[]>>;
   listCard: ICard[];
+  counter: ICounter;
+  setCounter: Dispatch<SetStateAction<ICounter>>;
+  manaCounter: IManaCounter;
+  setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
 }
 
 export default function Card(props: Props) {
@@ -115,31 +121,153 @@ export default function Card(props: Props) {
     }
   }
 
+  const listTypeStr = {
+    equipment: 'Trang Bị',
+    spell: 'Bài phép',
+    unit: 'Bài quân',
+    landmark: 'Địa Danh',
+  };
+
+  function counterCard() {
+    const data = props.counter;
+    data.all += 1;
+
+    if (props.card?.rarityRef == 'Champion') {
+      data.champion += 1;
+    }
+    switch (props.card?.type) {
+      case listTypeStr.unit: {
+        data.unit += 1;
+        break;
+      }
+      case listTypeStr.spell: {
+        data.spell += 1;
+        break;
+      }
+      case listTypeStr.landmark: {
+        data.landmark += 1;
+        break;
+      }
+      case listTypeStr.equipment: {
+        data.equipment += 1;
+        break;
+      }
+      default: {
+        data.unit += 1;
+        break;
+      }
+    }
+    props.setCounter(data);
+  }
+
+  function counterMana() {
+    const data = props.manaCounter;
+
+    switch (props.card?.cost) {
+      case 0: {
+        data.zero += 1;
+        data.max = data.zero > data.max ? data.zero : data.max;
+        break;
+      }
+      case 1: {
+        data.one += 1;
+        data.max = data.one > data.max ? data.one : data.max;
+        break;
+      }
+      case 2: {
+        data.two += 1;
+        data.max = data.two > data.max ? data.two : data.max;
+        break;
+      }
+      case 3: {
+        data.three += 1;
+        data.max = data.three > data.max ? data.three : data.max;
+        break;
+      }
+      case 4: {
+        data.four += 1;
+        data.max = data.four > data.max ? data.four : data.max;
+        break;
+      }
+      case 5: {
+        data.five += 1;
+        data.max = data.five > data.max ? data.five : data.max;
+        break;
+      }
+      case 6: {
+        data.six += 1;
+        data.max = data.six > data.max ? data.six : data.max;
+        break;
+      }
+      case 7: {
+        data.seven += 1;
+        data.max = data.seven > data.max ? data.seven : data.max;
+        break;
+      }
+      case 8: {
+        data.eight += 1;
+        data.max = data.eight > data.max ? data.eight : data.max;
+        break;
+      }
+      case 9: {
+        data.nine += 1;
+        data.max = data.nine > data.max ? data.nine : data.max;
+        break;
+      }
+      default: {
+        data.more += 1;
+        data.max = data.more > data.max ? data.more : data.max;
+        break;
+      }
+    }
+
+    props.setManaCounter(data);
+  }
+
+  function checkCanAdd() {
+    let result = true;
+    if (numInDeck == 3) {
+      result = false;
+    }
+    if (props.counter?.all == 40) {
+      result = false;
+    }
+    if (props.counter?.champion == 6 && props.card?.rarityRef == 'Champion') {
+      result = false;
+    }
+    return result;
+  }
+
   function handleClickAddCard() {
     const arr = props.deck;
 
     if (numInDeck == 0) {
-      props.setDeck([
+      const newArr = [
         ...arr,
         {
           cardCode: props.card?.cardCode,
+          card: props.card,
           count: numInDeck + 1,
-          name: props.card.name,
-          cost: props.card.cost,
-          img: props.card.fullAbsolutePath,
           color: getColorRegion(props.card?.regionRefs[0] || 'default'), //'#E29E76';
+          cost: props.card.cost,
+          name: props.card.name,
         },
-      ]);
+      ];
+      props.setDeck(_.sortBy(newArr, ['cost', 'name']));
+      counterMana();
+      counterCard();
       setNumInDeck(numInDeck + 1);
     } else {
       const newArr = [];
       for (const iterator of arr) {
-        if (iterator.cardCode == props.card?.cardCode) {
+        if (iterator.card?.cardCode == props.card?.cardCode) {
           iterator.count += 1;
         }
         newArr.push(iterator);
       }
       props.setDeck(newArr);
+      counterMana();
+      counterCard();
       setNumInDeck(numInDeck + 1);
     }
   }
@@ -149,12 +277,12 @@ export default function Card(props: Props) {
       <div className="relative">
         <Image
           onClick={() => {
-            if (numInDeck < 3) {
+            if (checkCanAdd()) {
               handleClickAddCard();
             }
           }}
           src={props.card?.gameAbsolutePath}
-          className={numInDeck < 3 ? `hover:scale-105 hover:cursor-pointer` : 'opacity-50'}
+          className={checkCanAdd() ? `hover:scale-105 hover:cursor-pointer` : 'opacity-50'}
           width={0}
           height={0}
           alt="card"

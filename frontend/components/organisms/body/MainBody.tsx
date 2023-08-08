@@ -13,7 +13,9 @@ import RegionCircleBtnList from '@/components/molecules/mainBody/RegionCircleBtn
 import { backendUrl } from '@/constants/env';
 import { operator } from '@/constants/filterOperator';
 import { ICardInDeck } from '@/interface/cardInDeck';
+import { ICounter } from '@/interface/counter';
 import { Filter } from '@/interface/filter';
+import { IManaCounter } from '@/interface/manaCounter';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -26,10 +28,11 @@ export default function MainBody() {
   const [rarity, setRarity] = useState<string[]>([]);
   const [type, setType] = useState<string[]>([]);
   const [cost, setCost] = useState<number[]>([]);
-  const [format, setFormat] = useState<string[]>([]);
+  const [format, setFormat] = useState<string[]>(['client_Formats_Standard_name']);
   const [region, setRegion] = useState<string[]>([]);
   const [deck, setDeck] = useState<ICardInDeck[]>([]);
-  const [counter, setCounter] = useState({ champion: 0, unit: 0, spell: 0, landmark: 0, equipment: 0, all: 0 });
+  const [counter, setCounter] = useState<ICounter>({ champion: 0, unit: 0, spell: 0, landmark: 0, equipment: 0, all: 0 });
+  const [manaCounter, setManaCounter] = useState<IManaCounter>({ zero: 0, one: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0, eight: 0, nine: 0, more: 0, max: 0 });
 
   useEffect(() => {
     async function load() {
@@ -121,18 +124,18 @@ export default function MainBody() {
                 <span className="text-white">Bộ bài</span>
               </div>
               <div className="flex px-4 justify-between">
-                <Counter num={0} total={2} type="champion" />
-                <Counter num={0} type="unit" />
-                <Counter num={0} type="spell" />
-                <Counter num={0} type="landmark" />
-                <Counter num={0} type="equipment" />
-                <Counter num={0} total={40} type="card" />
+                <Counter num={counter.champion} total={6} type="champion" />
+                <Counter num={counter.unit} type="unit" />
+                <Counter num={counter.spell} type="spell" />
+                <Counter num={counter.landmark} type="landmark" />
+                <Counter num={counter.equipment} type="equipment" />
+                <Counter num={counter.all} total={40} type="card" />
               </div>
               <div className="flex px-4 mt-4 justify-between h-fit">
-                <CounterChart />
+                <CounterChart value={manaCounter} setValue={setManaCounter} />
               </div>
               <div className="flex px-4 py-4 justify-between flex-1 overflow-hidden">
-                <ListCardDeck deck={deck} setDeck={setDeck} />
+                <ListCardDeck deck={deck} setDeck={setDeck} counter={counter} setCounter={setCounter} manaCounter={manaCounter} setManaCounter={setManaCounter} />
               </div>
             </div>
           </div>
@@ -171,7 +174,23 @@ export default function MainBody() {
             </div>
             {/* Card */}
             <div className="mt-5 flex-1 flex overflow-hidden w-4/5 border-y border-gray-400 py-0.5">
-              <CardList count={count} cards={cards} name={name} subtypes={subtypes} rarity={rarity} type={type} cost={cost} format={format} region={region} deck={deck} setDeck={setDeck} />
+              <CardList
+                count={count}
+                cards={cards}
+                name={name}
+                subtypes={subtypes}
+                rarity={rarity}
+                type={type}
+                cost={cost}
+                format={format}
+                region={region}
+                deck={deck}
+                setDeck={setDeck}
+                counter={counter}
+                setCounter={setCounter}
+                manaCounter={manaCounter}
+                setManaCounter={setManaCounter}
+              />
             </div>
           </div>
         </div>
