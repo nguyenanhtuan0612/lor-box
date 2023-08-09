@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { ICardInDeck } from '@/interface/cardInDeck';
 import { ICounter } from '@/interface/counter';
 import { IManaCounter } from '@/interface/manaCounter';
+import { IDeckInfo } from '@/interface/deckInfo';
 
 interface Props {
   deck: ICardInDeck[];
@@ -11,6 +12,8 @@ interface Props {
   setCounter: Dispatch<SetStateAction<ICounter>>;
   manaCounter: IManaCounter;
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
+  deckInfo: IDeckInfo;
+  setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
 }
 
 export default function ListCardDeck(props: Props) {
@@ -36,6 +39,8 @@ export default function ListCardDeck(props: Props) {
             setCounter={props.setCounter}
             manaCounter={props.manaCounter}
             setManaCounter={props.setManaCounter}
+            deckInfo={props.deckInfo}
+            setDeckInfo={props.setDeckInfo}
           />
         );
       })}

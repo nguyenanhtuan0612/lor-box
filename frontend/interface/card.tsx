@@ -23,6 +23,37 @@ export interface ICard {
   flavorText: string;
   associatedCardRefs: string[];
   active: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export function defaultCard(): ICard {
+  const d: ICard = {
+    id: 0,
+    cardCode: '',
+    name: '',
+    type: '',
+    subtypes: [],
+    gameAbsolutePath: '',
+    fullAbsolutePath: '',
+    regionRefs: [],
+    attack: 0,
+    health: 0,
+    cost: 0,
+    description: '',
+    descriptionRaw: '',
+    levelupDescription: '',
+    levelupDescriptionRaw: '',
+    keywordRefs: [],
+    spellSpeedRef: '',
+    rarityRef: '',
+    collectible: true,
+    gameSet: '',
+    formatRefs: [],
+    flavorText: '',
+    associatedCardRefs: [],
+    active: true,
+  };
+
+  return d;
 }

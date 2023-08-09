@@ -6,6 +6,7 @@ import { ICard } from '@/interface/card';
 import _ from 'lodash';
 import { ICounter } from '@/interface/counter';
 import { IManaCounter } from '@/interface/manaCounter';
+import { IDeckInfo } from '@/interface/deckInfo';
 
 interface Props {
   card: ICard;
@@ -16,6 +17,8 @@ interface Props {
   setCounter: Dispatch<SetStateAction<ICounter>>;
   manaCounter: IManaCounter;
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
+  deckInfo: IDeckInfo;
+  setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
 }
 
 export default function Card(props: Props) {
@@ -160,6 +163,23 @@ export default function Card(props: Props) {
     props.setCounter(data);
   }
 
+  function getNewDeckInfo(arr: ICardInDeck[]) {
+    let mainCard = null;
+    let mainChampion = null;
+
+    const champions: string[] = [];
+    for (const iterator of arr) {
+      if (iterator.card.rarityRef == 'Champion') {
+        champions.push(iterator.card.name);
+        mainChampion = iterator.card;
+      } else {
+        mainCard = iterator.card;
+      }
+    }
+
+    props.setDeckInfo({ mainCard: mainCard, champions: champions, regions: [...props.deckInfo?.regions, ...props.card?.regionRefs] });
+  }
+
   function counterMana() {
     const data = props.manaCounter;
 
@@ -235,6 +255,11 @@ export default function Card(props: Props) {
     if (props.counter?.champion == 6 && props.card?.rarityRef == 'Champion') {
       result = false;
     }
+    const newRegions = _.uniq([...props.deckInfo?.regions, ...props.card?.regionRefs]);
+    if (newRegions.length > 2) {
+      result = false;
+    }
+
     return result;
   }
 
@@ -253,7 +278,9 @@ export default function Card(props: Props) {
           name: props.card.name,
         },
       ];
-      props.setDeck(_.sortBy(newArr, ['cost', 'name']));
+      const sort = _.sortBy(newArr, ['cost', 'name']);
+      props.setDeck(sort);
+      getNewDeckInfo(sort);
       counterMana();
       counterCard();
       setNumInDeck(numInDeck + 1);

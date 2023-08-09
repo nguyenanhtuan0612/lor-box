@@ -6,7 +6,6 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Tooltip } from 'react-tooltip';
 
 interface Props {
   icon: 'equipment' | 'spell' | 'unit' | 'landmark';
@@ -62,11 +61,10 @@ export default function CardTyeCircleButton(props: Props) {
       }}
       className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${
         active ? 'bg-gray-600/[.8] border-yellow-200' : 'bg-gray-600/[.3] border-gray-500'
-      }  hover:bg-gray-500/[.8]`}
+      }  hover:bg-gray-500/[.8] hover:cursor-pointer`}
     >
       {active ? <FontAwesomeIcon icon={faCheck} className="absolute -right-0.5 -top-0.5 text-green-600" /> : <></>}
       <Image src={listIcon[props.icon]} alt="icon-regions" height={28} />
-      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99 / .8)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </div>
   );
 }

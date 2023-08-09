@@ -4,6 +4,7 @@ import { operator } from '@/constants/filterOperator';
 import { ICard } from '@/interface/card';
 import { ICardInDeck } from '@/interface/cardInDeck';
 import { ICounter } from '@/interface/counter';
+import { IDeckInfo } from '@/interface/deckInfo';
 import { Filter } from '@/interface/filter';
 import { IManaCounter } from '@/interface/manaCounter';
 import axios from 'axios';
@@ -26,6 +27,8 @@ interface Props {
   setCounter: Dispatch<SetStateAction<ICounter>>;
   manaCounter: IManaCounter;
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
+  deckInfo: IDeckInfo;
+  setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
 }
 
 export default function CardList(props: Props) {
@@ -140,6 +143,8 @@ export default function CardList(props: Props) {
                 setCounter={props.setCounter}
                 manaCounter={props.manaCounter}
                 setManaCounter={props.setManaCounter}
+                deckInfo={props.deckInfo}
+                setDeckInfo={props.setDeckInfo}
               />
             );
           })}

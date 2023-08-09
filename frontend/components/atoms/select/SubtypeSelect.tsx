@@ -17,7 +17,7 @@ export default function SubtypeSelect(props: Props) {
           props.setValue(e.target.value);
         }}
         id="subtype"
-        className="block w-60 h-10 px-2 text-sm  border  rounded-lg bg-gray-700 border-gray-600 text-gray-200 focus:ring-blue-500 focus:border-blue-500"
+        className="hover:cursor-pointer block w-60 h-10 px-2 text-sm  border  rounded-lg bg-gray-700 border-gray-600 text-gray-200 focus:ring-blue-500 focus:border-blue-500"
       >
         <option value="">Chọn tộc/hệ phụ</option>
         <option value="BÒ SÁT">Bò sát</option>

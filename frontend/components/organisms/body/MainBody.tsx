@@ -1,4 +1,5 @@
 import Counter from '@/components/atoms/DeckItem/Counter';
+import FaIconButton from '@/components/atoms/buttons/FaIconButton';
 import FaIconCircleButton from '@/components/atoms/buttons/FaIconCircleButton';
 import InputSearchCard from '@/components/atoms/input/InputSearchCard';
 import SubtypeSelect from '@/components/atoms/select/SubtypeSelect';
@@ -12,11 +13,13 @@ import RarityBtnList from '@/components/molecules/mainBody/RarityBtnList';
 import RegionCircleBtnList from '@/components/molecules/mainBody/RegionCircleBtnList';
 import { backendUrl } from '@/constants/env';
 import { operator } from '@/constants/filterOperator';
+import { defaultCard } from '@/interface/card';
 import { ICardInDeck } from '@/interface/cardInDeck';
-import { ICounter } from '@/interface/counter';
+import { ICounter, defaultCounter } from '@/interface/counter';
+import { IDeckInfo } from '@/interface/deckInfo';
 import { Filter } from '@/interface/filter';
-import { IManaCounter } from '@/interface/manaCounter';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { IManaCounter, defaultManaCounter } from '@/interface/manaCounter';
+import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -31,8 +34,9 @@ export default function MainBody() {
   const [format, setFormat] = useState<string[]>(['client_Formats_Standard_name']);
   const [region, setRegion] = useState<string[]>([]);
   const [deck, setDeck] = useState<ICardInDeck[]>([]);
-  const [counter, setCounter] = useState<ICounter>({ champion: 0, unit: 0, spell: 0, landmark: 0, equipment: 0, all: 0 });
-  const [manaCounter, setManaCounter] = useState<IManaCounter>({ zero: 0, one: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0, eight: 0, nine: 0, more: 0, max: 0 });
+  const [counter, setCounter] = useState<ICounter>(defaultCounter());
+  const [manaCounter, setManaCounter] = useState<IManaCounter>(defaultManaCounter());
+  const [deckInfo, setDeckInfo] = useState<IDeckInfo>({ regions: [], mainCard: defaultCard(), champions: [] });
 
   useEffect(() => {
     async function load() {
@@ -102,6 +106,12 @@ export default function MainBody() {
     load();
   }, [name, subtypes, rarity, type, cost, format, region]);
 
+  useEffect(() => {
+    if (deckInfo.regions.length == 2 || deckInfo.regions.length == 0) {
+      setRegion(deckInfo.regions);
+    }
+  }, [deckInfo]);
+
   function clearFilter() {
     setName('');
     setSubtypes('');
@@ -110,6 +120,13 @@ export default function MainBody() {
     setCost([]);
     setFormat([]);
     setRegion([]);
+  }
+
+  function clearDeck() {
+    setDeck([]);
+    setCounter(defaultCounter());
+    setManaCounter(defaultManaCounter());
+    setDeckInfo({ regions: [], mainCard: defaultCard(), champions: [] });
   }
 
   return (
@@ -121,7 +138,13 @@ export default function MainBody() {
           <div className="px-4 py-6 w-full h-full ">
             <div className="bg-gray-800/[.8] w-full h-full rounded-lg flex flex-col">
               <div className="flex px-4 py-4 text-2xl font-semibold">
-                <span className="text-white">Bộ bài</span>
+                <div className=" min-w-fit">
+                  <span className="text-white mr-4">Bộ bài</span>
+                </div>
+                <div className="flex justify-end basis-full">
+                  <FaIconButton icon={faFloppyDisk} size="sm" w="w-8" h="h-8" tooltipMsg="Lưu bộ bài" disable={counter.all < 40} />
+                  <FaIconButton icon={faTrash} size="sm" w="w-8" h="h-8" tooltipMsg="Bỏ toàn bộ lá bài" onClick={clearDeck} disable={counter.all == 0} />
+                </div>
               </div>
               <div className="flex px-4 justify-between">
                 <Counter num={counter.champion} total={6} type="champion" />
@@ -135,7 +158,16 @@ export default function MainBody() {
                 <CounterChart value={manaCounter} setValue={setManaCounter} />
               </div>
               <div className="flex px-4 py-4 justify-between flex-1 overflow-hidden">
-                <ListCardDeck deck={deck} setDeck={setDeck} counter={counter} setCounter={setCounter} manaCounter={manaCounter} setManaCounter={setManaCounter} />
+                <ListCardDeck
+                  deck={deck}
+                  setDeck={setDeck}
+                  counter={counter}
+                  setCounter={setCounter}
+                  manaCounter={manaCounter}
+                  setManaCounter={setManaCounter}
+                  deckInfo={deckInfo}
+                  setDeckInfo={setDeckInfo}
+                />
               </div>
             </div>
           </div>
@@ -146,7 +178,7 @@ export default function MainBody() {
             <div className="flex">
               <InputSearchCard value={name} setValue={setName} />
               <div className="ml-4">
-                <RegionCircleBtnList value={region} setValue={setRegion} />
+                <RegionCircleBtnList value={region} setValue={setRegion} deckInfo={deckInfo} />
               </div>
             </div>
             <div className="flex mt-2">
@@ -190,6 +222,8 @@ export default function MainBody() {
                 setCounter={setCounter}
                 manaCounter={manaCounter}
                 setManaCounter={setManaCounter}
+                deckInfo={deckInfo}
+                setDeckInfo={setDeckInfo}
               />
             </div>
           </div>

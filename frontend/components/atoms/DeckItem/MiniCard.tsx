@@ -1,7 +1,9 @@
 import { ICard } from '@/interface/card';
 import { ICardInDeck } from '@/interface/cardInDeck';
 import { ICounter } from '@/interface/counter';
+import { IDeckInfo } from '@/interface/deckInfo';
 import { IManaCounter } from '@/interface/manaCounter';
+import _ from 'lodash';
 import Image from 'next/image';
 import React, { Dispatch, SetStateAction } from 'react';
 
@@ -16,6 +18,8 @@ interface Props {
   setCounter: Dispatch<SetStateAction<ICounter>>;
   manaCounter: IManaCounter;
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
+  deckInfo: IDeckInfo;
+  setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
 }
 
 export default function MiniCard(props: Props) {
@@ -114,9 +118,27 @@ export default function MiniCard(props: Props) {
         data.max = (data as any)[iterator];
       }
     }
-    console.log(data);
 
     props.setManaCounter(data);
+  }
+
+  function getNewDeckInfo(arr: ICardInDeck[]) {
+    let mainCard = null;
+    let mainChampion = null;
+
+    const champions: string[] = [];
+    let regions: string[] = [];
+    for (const iterator of arr) {
+      if (iterator.card.rarityRef == 'Champion') {
+        champions.push(iterator.card.name);
+        mainChampion = iterator.card;
+      } else {
+        mainCard = iterator.card;
+        regions = regions.concat(iterator.card?.regionRefs);
+      }
+    }
+
+    props.setDeckInfo({ mainCard: mainCard, champions: champions, regions: _.uniq(regions) });
   }
 
   function handleRemoveCard() {
@@ -129,6 +151,7 @@ export default function MiniCard(props: Props) {
       counterMana();
       counterCard();
       props.setDeck(temp);
+      getNewDeckInfo(temp);
     } else {
       const newArr = [];
       for (const iterator of arr) {
