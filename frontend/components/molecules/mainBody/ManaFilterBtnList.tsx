@@ -10,7 +10,7 @@ export default function ManaFilterBtnList(props: Props) {
   return (
     <div className="h-fit">
       <span className="text-sm text-gray-300">Mana:</span>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <ManaFilterButton value={props.value} setValue={props.setValue} cost="0" />
         <ManaFilterButton value={props.value} setValue={props.setValue} cost="1" />
         <ManaFilterButton value={props.value} setValue={props.setValue} cost="2" />

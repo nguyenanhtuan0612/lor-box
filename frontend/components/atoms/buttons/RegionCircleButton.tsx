@@ -79,7 +79,7 @@ export default function RegionCircleButton(props: Props) {
 
   useEffect(() => {
     const regions = props.deckInfo?.regions;
-    if (regions.length == 2 && !regions.includes(listRegionRef[props.icon])) {
+    if (regions.length >= 2 && !regions.includes(listRegionRef[props.icon])) {
       setDisable(true);
     } else {
       setDisable(false);
@@ -108,7 +108,7 @@ export default function RegionCircleButton(props: Props) {
           setActive(!active);
         }
       }}
-      className={` relative flex w-10 h-10 justify-center items-center rounded-full border ${active ? 'bg-gray-600/[.8] border-yellow-200' : 'bg-gray-600/[.3] border-gray-500'} ${
+      className={` relative flex 2xl:w-12 2xl:h-12  w-10 h-10 justify-center items-center rounded-full border ${active ? 'bg-gray-600/[.8] border-yellow-200' : 'bg-gray-600/[.3] border-gray-500'} ${
         disable ? `opacity-50` : `hover:cursor-pointer active:bg-gray-500 hover:bg-gray-500/[.8]`
       }`}
     >

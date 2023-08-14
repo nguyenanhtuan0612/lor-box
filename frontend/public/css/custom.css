@@ -17,3 +17,8 @@ select {
   background-position: calc(100% - 8px) center;
   background-color: wheat;
 }
+
+.popup-arrow {
+  color: #1f2937;
+  stroke: #1f2937;
+}

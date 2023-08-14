@@ -19,6 +19,7 @@ interface Props {
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
   deckInfo: IDeckInfo;
   setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
+  disableNum?: number;
 }
 
 export default function Card(props: Props) {
@@ -166,18 +167,23 @@ export default function Card(props: Props) {
   function getNewDeckInfo(arr: ICardInDeck[]) {
     let mainCard = null;
     let mainChampion = null;
+    let mainUnit = null;
 
     const champions: string[] = [];
     for (const iterator of arr) {
       if (iterator.card.rarityRef == 'Champion') {
         champions.push(iterator.card.name);
         mainChampion = iterator.card;
+      } else if (iterator.card.type == 'Bài quân') {
+        mainUnit = iterator.card;
       } else {
         mainCard = iterator.card;
       }
     }
 
-    props.setDeckInfo({ mainCard: mainCard, champions: champions, regions: [...props.deckInfo?.regions, ...props.card?.regionRefs] });
+    const finalMaincard = mainChampion || mainUnit || mainCard;
+
+    props.setDeckInfo({ mainCard: finalMaincard, champions: champions, regions: _.uniq([...props.deckInfo?.regions, ...props.card?.regionRefs]) });
   }
 
   function counterMana() {

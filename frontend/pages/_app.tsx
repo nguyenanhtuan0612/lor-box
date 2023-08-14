@@ -1,4 +1,5 @@
 import '@/public/css/index.css';
+import 'reactjs-popup/dist/index.css';
 import '@/public/css/custom.css';
 import type { AppProps } from 'next/app';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -10,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Component {...pageProps} />
-      <Tooltip id="tooltip" style={{ backgroundColor: 'rgb(75 85 99)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
+      <Tooltip id="tooltip" className=" z-50" style={{ backgroundColor: 'rgb(75 85 99)', color: 'white', padding: '4px 8px', fontSize: '14px' }} />
     </>
   );
 }

@@ -123,22 +123,28 @@ export default function MiniCard(props: Props) {
   }
 
   function getNewDeckInfo(arr: ICardInDeck[]) {
-    let mainCard = null;
-    let mainChampion = null;
-
     const champions: string[] = [];
     let regions: string[] = [];
+    let mainCard = null;
+    let mainChampion = null;
+    let mainUnit = null;
+
     for (const iterator of arr) {
       if (iterator.card.rarityRef == 'Champion') {
         champions.push(iterator.card.name);
         mainChampion = iterator.card;
+      } else if (iterator.card.type == 'Bài quân') {
+        mainUnit = iterator.card;
       } else {
         mainCard = iterator.card;
-        regions = regions.concat(iterator.card?.regionRefs);
       }
+      regions = regions.concat(iterator.card.regionRefs);
     }
 
-    props.setDeckInfo({ mainCard: mainCard, champions: champions, regions: _.uniq(regions) });
+    console.log(1, arr);
+    console.log(2, regions);
+    const finalMaincard = mainChampion || mainUnit || mainCard;
+    props.setDeckInfo({ mainCard: finalMaincard, champions: champions, regions: _.uniq(regions) });
   }
 
   function handleRemoveCard() {
@@ -163,6 +169,7 @@ export default function MiniCard(props: Props) {
       counterMana();
       counterCard();
       props.setDeck(newArr);
+      getNewDeckInfo(newArr);
     }
   }
 

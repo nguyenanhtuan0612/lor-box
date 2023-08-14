@@ -29,6 +29,7 @@ interface Props {
   setManaCounter: Dispatch<SetStateAction<IManaCounter>>;
   deckInfo: IDeckInfo;
   setDeckInfo: Dispatch<SetStateAction<IDeckInfo>>;
+  limit: number;
 }
 
 export default function CardList(props: Props) {
@@ -41,6 +42,7 @@ export default function CardList(props: Props) {
   const [cost, setCost] = useState<number[]>([]);
   const [format, setFormat] = useState<string[]>([]);
   const [region, setRegion] = useState<string[]>(['client_Formats_Standard_name']);
+  const [limit, setLimit] = useState(20);
 
   useEffect(() => {
     setCards(props.cards);
@@ -52,6 +54,7 @@ export default function CardList(props: Props) {
     setCost(props.cost);
     setFormat(props.format);
     setRegion(props.region);
+    setLimit(props.limit);
   }, [props.cards]);
 
   const getMorePost = async () => {
@@ -113,7 +116,7 @@ export default function CardList(props: Props) {
     }
 
     const strFilter = JSON.stringify(filter);
-    const res = await axios.get(`${backendUrl}/api/cards?limit=20&start=${cards.length}&order=[{"prop":"cost","direction":"asc"},{"prop":"name","direction":"asc"}]&filter=${strFilter}`);
+    const res = await axios.get(`${backendUrl}/api/cards?limit=${limit}&start=${cards.length}&order=[{"prop":"cost","direction":"asc"},{"prop":"name","direction":"asc"}]&filter=${strFilter}`);
     const newCards = await res.data.rows;
     setCards(cards.concat(newCards));
   };
@@ -122,7 +125,7 @@ export default function CardList(props: Props) {
     <div className="w-full no-scrollbar" style={{ overflowY: 'scroll' }} id="scrollableDiv">
       {cards.length > 0 ? (
         <InfiniteScroll
-          className=" no-scrollbar py-0.5 grid grid-cols-5 gap-2"
+          className=" no-scrollbar py-0.5 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2"
           dataLength={cards.length}
           next={getMorePost}
           hasMore={cards.length < count}

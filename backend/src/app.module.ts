@@ -16,6 +16,8 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 import { QueryMiddleware } from './middlewares/query.middleware';
 import { CardController } from './controllers/card.controller';
 import { CardService } from './services/card.service';
+import { DeckController } from './controllers/deck.controller';
+import { DeckService } from './services/deck.service';
 const ENV = process.env.NODE_ENV;
 console.log(ENV);
 
@@ -47,6 +49,7 @@ console.log(ENV);
         AuthController,
         SystemController,
         CardController,
+        DeckController,
     ],
     providers: [
         AppService,
@@ -54,6 +57,7 @@ console.log(ENV);
         AuthService,
         SystemService,
         CardService,
+        DeckService,
     ],
 })
 export class AppModule {

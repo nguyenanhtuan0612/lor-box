@@ -1,6 +1,7 @@
 import Counter from '@/components/atoms/DeckItem/Counter';
 import FaIconButton from '@/components/atoms/buttons/FaIconButton';
 import FaIconCircleButton from '@/components/atoms/buttons/FaIconCircleButton';
+import useWindowSize from '@/components/atoms/hooks/useWindowSize';
 import InputSearchCard from '@/components/atoms/input/InputSearchCard';
 import SubtypeSelect from '@/components/atoms/select/SubtypeSelect';
 import CardList from '@/components/molecules/mainBody/CardList';
@@ -9,6 +10,7 @@ import CounterChart from '@/components/molecules/mainBody/CounterChart';
 import FormatCircleBtnList from '@/components/molecules/mainBody/FormatCircleBtnList';
 import ListCardDeck from '@/components/molecules/mainBody/ListCardDeck';
 import ManaFilterBtnList from '@/components/molecules/mainBody/ManaFilterBtnList';
+import ModalSaveDeck from '@/components/molecules/mainBody/ModalSaveDeck';
 import RarityBtnList from '@/components/molecules/mainBody/RarityBtnList';
 import RegionCircleBtnList from '@/components/molecules/mainBody/RegionCircleBtnList';
 import { backendUrl } from '@/constants/env';
@@ -19,7 +21,8 @@ import { ICounter, defaultCounter } from '@/interface/counter';
 import { IDeckInfo } from '@/interface/deckInfo';
 import { Filter } from '@/interface/filter';
 import { IManaCounter, defaultManaCounter } from '@/interface/manaCounter';
-import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faScrewdriverWrench, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -27,6 +30,7 @@ export default function MainBody() {
   const [cards, setCards] = useState([]);
   const [count, setCount] = useState(0);
   const [name, setName] = useState('');
+  const [limit, setLimit] = useState(20);
   const [subtypes, setSubtypes] = useState('');
   const [rarity, setRarity] = useState<string[]>([]);
   const [type, setType] = useState<string[]>([]);
@@ -37,10 +41,15 @@ export default function MainBody() {
   const [counter, setCounter] = useState<ICounter>(defaultCounter());
   const [manaCounter, setManaCounter] = useState<IManaCounter>(defaultManaCounter());
   const [deckInfo, setDeckInfo] = useState<IDeckInfo>({ regions: [], mainCard: defaultCard(), champions: [] });
+  const [showModal, setShowModal] = useState(false);
+  const [generatingDeckcode, setGeneratingDeckcode] = useState(false);
+  const [toggleSideFilter, setToggleSideFilter] = useState(false);
+  const size = useWindowSize();
 
   useEffect(() => {
     async function load() {
       const filter: Filter[] = [];
+      let limitGet = limit;
       if (name != '') {
         filter.push({
           prop: 'name',
@@ -97,8 +106,18 @@ export default function MainBody() {
         });
       }
 
+      switch (true) {
+        case size.width < 1024 && size.width >= 768: {
+          limitGet = 21;
+          setLimit(21);
+          break;
+        }
+        default:
+          break;
+      }
+
       const strFilter = JSON.stringify(filter);
-      const res = await axios.get(`${backendUrl}/api/cards?limit=20&start=0&order=[{"prop":"cost","direction":"asc"},{"prop":"name","direction":"asc"}]&filter=${strFilter}`);
+      const res = await axios.get(`${backendUrl}/api/cards?limit=${limitGet}&start=0&order=[{"prop":"cost","direction":"asc"},{"prop":"name","direction":"asc"}]&filter=${strFilter}`);
       setCards(res.data.rows);
       setCount(res.data.count);
     }
@@ -129,12 +148,20 @@ export default function MainBody() {
     setDeckInfo({ regions: [], mainCard: defaultCard(), champions: [] });
   }
 
+  async function getDeckcode() {
+    setGeneratingDeckcode(true);
+    setShowModal(true);
+    const res = await axios.post(`${backendUrl}/api/decks/deckCode`, { deck });
+    setDeckInfo({ ...deckInfo, deckcode: res.data.deckCode });
+    setGeneratingDeckcode(false);
+  }
+
   return (
     <div className=" absolute h-full w-full">
       <div className="absolute -z-20 bg-[url('https://dd.b.pvp.net/4_7_0/set1/vi_vn/img/cards/01DE012T1-full.png')] h-full w-full bg-cover"></div>
       <div className="absolute bg-gray-800/[.6] -z-10 h-full w-full"></div>
       <div className="h-full w-full pl-14 flex">
-        <div className=" w-3/12">
+        <div className="2xl:w-1/5 xl:w-3/12 lg:w-4/12 md:w-5/12 w-3/12">
           <div className="px-4 py-6 w-full h-full ">
             <div className="bg-gray-800/[.8] w-full h-full rounded-lg flex flex-col">
               <div className="flex px-4 py-4 text-2xl font-semibold">
@@ -142,7 +169,7 @@ export default function MainBody() {
                   <span className="text-white mr-4">Bộ bài</span>
                 </div>
                 <div className="flex justify-end basis-full">
-                  <FaIconButton icon={faFloppyDisk} size="sm" w="w-8" h="h-8" tooltipMsg="Lưu bộ bài" disable={counter.all < 40} />
+                  <FaIconButton icon={faFloppyDisk} size="sm" w="w-8" h="h-8" tooltipMsg="Lưu bộ bài" onClick={() => getDeckcode()} disable={counter.all < 40} />
                   <FaIconButton icon={faTrash} size="sm" w="w-8" h="h-8" tooltipMsg="Bỏ toàn bộ lá bài" onClick={clearDeck} disable={counter.all == 0} />
                 </div>
               </div>
@@ -172,63 +199,136 @@ export default function MainBody() {
             </div>
           </div>
         </div>
-        <div className=" w-9/12">
+        <div className=" 2xl:w-4/5 xl:w-9/12 lg:w-8/12 md:w-7/12 w-9/12">
           <div className="py-6 h-full w-full flex flex-col">
             {/* Filter */}
-            <div className="flex">
-              <InputSearchCard value={name} setValue={setName} />
-              <div className="ml-4">
-                <RegionCircleBtnList value={region} setValue={setRegion} deckInfo={deckInfo} />
+            <div className="xl:block hidden">
+              <div className="flex">
+                <InputSearchCard value={name} setValue={setName} />
+                <div className="ml-4">
+                  <RegionCircleBtnList value={region} setValue={setRegion} deckInfo={deckInfo} />
+                </div>
               </div>
-            </div>
-            <div className="flex mt-2">
-              <SubtypeSelect value={subtypes} setValue={setSubtypes} />
-              <div className="ml-4">
-                <ManaFilterBtnList value={cost} setValue={setCost} />
+              <div className="flex mt-2">
+                <SubtypeSelect value={subtypes} setValue={setSubtypes} />
+                <div className="ml-4">
+                  <ManaFilterBtnList value={cost} setValue={setCost} />
+                </div>
               </div>
-            </div>
-            <div className="flex mt-2">
-              <RarityBtnList value={rarity} setValue={setRarity} />
-              <div className="ml-16">
-                <CardTypeCircleBtnList value={type} setValue={setType} />
-              </div>
-              <div className="ml-14">
-                <FormatCircleBtnList value={format} setValue={setFormat} />
-              </div>
-              <div className="ml-14 flex items-end">
-                <div className="h-fit ">
-                  <span className="text-sm text-gray-300"></span>
-                  <div className="flex items-center gap-2">
-                    <FaIconCircleButton tooltipMsg="Xóa bộ lọc" icon={faTrash} onClick={clearFilter} />
+              <div className="flex mt-2">
+                <RarityBtnList value={rarity} setValue={setRarity} />
+                <div className="ml-16">
+                  <CardTypeCircleBtnList value={type} setValue={setType} />
+                </div>
+                <div className="ml-14">
+                  <FormatCircleBtnList value={format} setValue={setFormat} />
+                </div>
+                <div className="ml-14 flex items-end">
+                  <div className="h-fit ">
+                    <span className="text-sm text-gray-300"></span>
+                    <div className="flex items-center gap-2">
+                      <FaIconCircleButton tooltipMsg="Xóa bộ lọc" icon={faTrash} onClick={clearFilter} />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* Card */}
-            <div className="mt-5 flex-1 flex overflow-hidden w-4/5 border-y border-gray-400 py-0.5">
-              <CardList
-                count={count}
-                cards={cards}
-                name={name}
-                subtypes={subtypes}
-                rarity={rarity}
-                type={type}
-                cost={cost}
-                format={format}
-                region={region}
-                deck={deck}
-                setDeck={setDeck}
-                counter={counter}
-                setCounter={setCounter}
-                manaCounter={manaCounter}
-                setManaCounter={setManaCounter}
-                deckInfo={deckInfo}
-                setDeckInfo={setDeckInfo}
-              />
+            <div className="flex-1 overflow-hidden flex relative">
+              <div className="xl:mt-5 mt-0 flex w-4/5 border-y border-gray-400 py-0.5   ">
+                <CardList
+                  limit={limit}
+                  count={count}
+                  cards={cards}
+                  name={name}
+                  subtypes={subtypes}
+                  rarity={rarity}
+                  type={type}
+                  cost={cost}
+                  format={format}
+                  region={region}
+                  deck={deck}
+                  setDeck={setDeck}
+                  counter={counter}
+                  setCounter={setCounter}
+                  manaCounter={manaCounter}
+                  setManaCounter={setManaCounter}
+                  deckInfo={deckInfo}
+                  setDeckInfo={setDeckInfo}
+                />
+              </div>
+
+              {/* MiniFilter */}
+              <div className="absolute right-0 top-0 flex h-full">
+                {toggleSideFilter ? null : (
+                  <div
+                    onClick={() => setToggleSideFilter(true)}
+                    className="xl:hidden flex bg-gray-600 p-2 pl-4 rounded-l-xl h-fit active:bg-gray-500 bg-gray-600/[.3] border border-r-0 border-gray-500 hover:bg-gray-500/[.8] hover:cursor-pointer"
+                  >
+                    <div className="lg:block hidden">
+                      <FontAwesomeIcon icon={faScrewdriverWrench} color="white" />
+                    </div>
+                    <span className="ml-2">Bộ lọc</span>
+                  </div>
+                )}
+                <div
+                  className={`bg-gray-900/[.9] xl:hidden transition-[width] duration-300 border-gray-700 h-full overflow-y-scroll overflow-hidden ${
+                    toggleSideFilter ? 'w-80 p-2 py-4 border border-r-0' : 'w-0'
+                  }`}
+                >
+                  {toggleSideFilter ? (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center">
+                          <FontAwesomeIcon icon={faScrewdriverWrench} size="lg" color="#D1D5DA" />
+                          <span className="ml-2 text-lg font-bold text-gray-300">Bộ lọc</span>
+                        </div>
+                        <div className="flex">
+                          <button type="button" className="bg-transparent hover:rounded-lg w-8 h-8 ml-auto inline-flex justify-center items-center hover:bg-gray-600" onClick={() => clearFilter()}>
+                            <FontAwesomeIcon icon={faTrash} color="#D1D5DA" />
+                          </button>
+                          <button
+                            type="button"
+                            className="bg-transparent hover:rounded-lg w-8 h-8 ml-auto inline-flex justify-center items-center hover:bg-gray-600"
+                            onClick={() => setToggleSideFilter(false)}
+                          >
+                            <FontAwesomeIcon icon={faXmark} size="xl" color="#D1D5DA" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <span className="text-sm text-gray-300">Tìm kiếm:</span>
+                        <InputSearchCard value={name} setValue={setName} />
+                      </div>
+                      <div className="mt-4">
+                        <SubtypeSelect value={subtypes} setValue={setSubtypes} />
+                      </div>
+                      <div className="mt-2">
+                        <span className="text-sm text-gray-300">Khu vực:</span>
+                        <RegionCircleBtnList value={region} setValue={setRegion} deckInfo={deckInfo} />
+                      </div>
+                      <div className="mt-2">
+                        <ManaFilterBtnList value={cost} setValue={setCost} />
+                      </div>
+                      <div className="mt-2">
+                        <RarityBtnList value={rarity} setValue={setRarity} />
+                      </div>
+                      <div className="mt-2 -ml-2">
+                        <CardTypeCircleBtnList value={type} setValue={setType} />
+                      </div>
+                      <div className="mt-2">
+                        <FormatCircleBtnList value={format} setValue={setFormat} />
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {showModal ? <ModalSaveDeck setShowModal={setShowModal} generatingDeckcode={generatingDeckcode} deckInfo={deckInfo} /> : null}
     </div>
   );
 }

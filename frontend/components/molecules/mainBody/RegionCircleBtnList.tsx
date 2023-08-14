@@ -10,7 +10,7 @@ interface Props {
 
 export default function RegionCircleBtnList(props: Props) {
   return (
-    <div className="flex h-full items-center gap-2">
+    <div className="flex h-full items-center gap-2 flex-wrap">
       {/* <RegionCircleButton icon="iconAll" active={true} /> */}
       <RegionCircleButton value={props.value} setValue={props.setValue} icon="iconBandlecity" deckInfo={props.deckInfo} />
       <RegionCircleButton value={props.value} setValue={props.setValue} icon="iconBilgewater" deckInfo={props.deckInfo} />

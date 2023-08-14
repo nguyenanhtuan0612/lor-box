@@ -39,7 +39,7 @@ export default function ManaFilterButton(props: Props) {
         }
         setActive(!active);
       }}
-      className={`active:bg-gray-500 relative flex w-10 h-10 justify-center items-center rounded-full border ${
+      className={`active:bg-gray-500 relative flex 2xl:w-12 2xl:h-12 w-10 h-10 justify-center items-center rounded-full border ${
         active ? 'bg-gray-600/[.8] border-yellow-200' : 'bg-gray-600/[.3] border-gray-500'
       }  hover:bg-gray-500/[.8] hover:cursor-pointer`}
     >
