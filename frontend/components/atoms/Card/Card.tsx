@@ -321,6 +321,8 @@ export default function Card(props: Props) {
           alt="card"
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
+          placeholder="blur"
+          blurDataURL="/img/card-placeholder.png"
         />
       </div>
       {numRingInDeck()}

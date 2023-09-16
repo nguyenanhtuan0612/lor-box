@@ -188,7 +188,7 @@ export default function MiniCard(props: Props) {
           }}
         ></div>
         <div className="flex h-full w-9/12 float-right justify-end items-center">
-          <Image src={props.card?.fullAbsolutePath} alt="bg-mini-card" width={0} height={0} sizes="10vw" style={{ width: '100%', height: 'auto' }} className="" />
+          <Image src={props.card?.fullAbsolutePath} alt="bg-mini-card" width={0} height={0} sizes="25vw" style={{ width: '100%', height: 'auto' }} className="" />
         </div>
       </div>
 

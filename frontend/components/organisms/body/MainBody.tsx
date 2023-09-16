@@ -44,6 +44,8 @@ export default function MainBody() {
   const [showModal, setShowModal] = useState(false);
   const [generatingDeckcode, setGeneratingDeckcode] = useState(false);
   const [toggleSideFilter, setToggleSideFilter] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingModal, setLoadingModal] = useState(false);
   const size = useWindowSize();
 
   useEffect(() => {
@@ -122,12 +124,16 @@ export default function MainBody() {
       setCount(res.data.count);
     }
 
+    setLoading(true);
     load();
+    setTimeout(() => setLoading(false), 200);
   }, [name, subtypes, rarity, type, cost, format, region]);
 
   useEffect(() => {
     if (deckInfo.regions.length == 2 || deckInfo.regions.length == 0) {
-      setRegion(deckInfo.regions);
+      if (JSON.stringify(deckInfo.regions) != JSON.stringify(region)) {
+        setRegion(deckInfo.regions);
+      }
     }
   }, [deckInfo]);
 
@@ -149,11 +155,13 @@ export default function MainBody() {
   }
 
   async function getDeckcode() {
+    setLoadingModal(true);
     setGeneratingDeckcode(true);
     setShowModal(true);
     const res = await axios.post(`${backendUrl}/api/decks/deckCode`, { deck });
     setDeckInfo({ ...deckInfo, deckcode: res.data.deckCode });
     setGeneratingDeckcode(false);
+    setTimeout(() => setLoadingModal(false), 400);
   }
 
   return (
@@ -162,7 +170,7 @@ export default function MainBody() {
       <div className="absolute bg-gray-800/[.6] -z-10 h-full w-full"></div>
       <div className="h-full w-full pl-14 flex">
         <div className="2xl:w-1/5 xl:w-3/12 lg:w-4/12 md:w-5/12 w-3/12">
-          <div className="px-4 py-6 w-full h-full ">
+          <div className="px-4 py-6 w-full h-full flex">
             <div className="bg-gray-800/[.8] w-full h-full rounded-lg flex flex-col">
               <div className="flex px-4 py-4 text-2xl font-semibold">
                 <div className=" min-w-fit">
@@ -235,7 +243,14 @@ export default function MainBody() {
             </div>
             {/* Card */}
             <div className="flex-1 overflow-hidden flex relative">
-              <div className="xl:mt-5 mt-0 flex w-4/5 border-y border-gray-400 py-0.5   ">
+              <div className="xl:mt-5 mt-0 flex w-4/5 border-y border-gray-400 py-0.5 relative  ">
+                {/* loading */}
+                {loading ? (
+                  <div className="absolute h-full w-full bg-gray-800/[.4] z-40 flex justify-center items-center">
+                    <span className="loader"></span>
+                  </div>
+                ) : null}
+
                 <CardList
                   limit={limit}
                   count={count}
@@ -259,7 +274,7 @@ export default function MainBody() {
               </div>
 
               {/* MiniFilter */}
-              <div className="absolute right-0 top-0 flex h-full">
+              <div className="absolute right-0 top-0 flex z-50 h-full">
                 {toggleSideFilter ? null : (
                   <div
                     onClick={() => setToggleSideFilter(true)}
@@ -328,7 +343,7 @@ export default function MainBody() {
         </div>
       </div>
 
-      {showModal ? <ModalSaveDeck setShowModal={setShowModal} generatingDeckcode={generatingDeckcode} deckInfo={deckInfo} /> : null}
+      {showModal ? <ModalSaveDeck loading={loadingModal} setShowModal={setShowModal} generatingDeckcode={generatingDeckcode} deckInfo={deckInfo} /> : null}
     </div>
   );
 }

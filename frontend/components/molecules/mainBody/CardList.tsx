@@ -125,11 +125,11 @@ export default function CardList(props: Props) {
     <div className="w-full no-scrollbar" style={{ overflowY: 'scroll' }} id="scrollableDiv">
       {cards.length > 0 ? (
         <InfiniteScroll
-          className=" no-scrollbar py-0.5 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2"
+          className=" no-scrollbar py-0.5 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-2 grid-cols-3"
           dataLength={cards.length}
           next={getMorePost}
           hasMore={cards.length < count}
-          loader={<h3> Loading...</h3>}
+          loader={<h4></h4>}
           endMessage={<h4></h4>}
           scrollableTarget="scrollableDiv"
           scrollThreshold={0.95}
@@ -153,7 +153,7 @@ export default function CardList(props: Props) {
           })}
         </InfiniteScroll>
       ) : (
-        <span className="text-white">Không tìm thấy thẻ bài nào...</span>
+        <h4></h4>
       )}
     </div>
   );

@@ -21,7 +21,7 @@ export default function MainHeader() {
   }
 
   return (
-    <div className="bg-gray-900 px-2 h-16 items-center flex gap-2 border-b border-gray-700 justify-between">
+    <div className="bg-gray-900 px-2 h-16 items-center flex gap-2 border-b border-gray-700 md:justify-normal justify-between">
       <Image src={logo} height={getSize()} alt="logo"></Image>
       <IconNavigation />
       <div className="block md:hidden relative">
@@ -32,9 +32,9 @@ export default function MainHeader() {
             </div>
           }
           position={'bottom right'}
-          contentStyle={{ padding: '0px', border: 'none' }}
+          contentStyle={{ padding: '0px', border: 'none', borderRadius: '6px' }}
         >
-          <div className="bg-gray-800">
+          <div className="bg-gray-800 rounded-md overflow-hidden">
             <div className="flex items-center hover:bg-gray-700 px-2 py-1">
               <FaIconButton h="md:h-12 h-8 " w="md:w-12 w-8" size={'sm'} icon={faHouse}></FaIconButton>
               <span className="ml-2 text-sm">Trang chủ</span>

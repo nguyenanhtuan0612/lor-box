@@ -10,14 +10,23 @@ interface Props {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   generatingDeckcode: boolean;
   deckInfo: IDeckInfo;
+  loading: boolean;
 }
 
-export default function ModalSaveDeck({ setShowModal, generatingDeckcode, deckInfo }: Props) {
+export default function ModalSaveDeck({ setShowModal, generatingDeckcode, deckInfo, loading }: Props) {
   return (
-    <div className=" absolute bg-gray-800/[.5] flex justify-center items-center top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div className="absolute bg-gray-800/[.5] flex justify-center items-center top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)]">
       <div className="w-full flex justify-center">
         {/* <!-- Modal content -->*/}
-        <div className="relative overflow-hidden rounded-lg shadow bg-cover w-2/3 h-auto" style={{ backgroundImage: `url('${deckInfo.mainCard?.fullAbsolutePath}')`, backgroundPosition: '50% 50%' }}>
+        <div
+          className="border relative overflow-hidden rounded-lg shadow bg-cover md:w-2/3 w-full h-auto"
+          style={{ backgroundImage: `url('${deckInfo.mainCard?.fullAbsolutePath}')`, backgroundPosition: '50% 50%' }}
+        >
+          {loading ? (
+            <div className="absolute h-full w-full bg-gray-800/[.4] z-40 flex justify-center items-center">
+              <span className="loader"></span>
+            </div>
+          ) : null}
           <div className="absolute w-full h-full bg-gray-700/[.5]"></div>
           <div className="relative">
             {/* <!-- Modal header -->*/}
@@ -30,6 +39,11 @@ export default function ModalSaveDeck({ setShowModal, generatingDeckcode, deckIn
               >
                 <FontAwesomeIcon icon={faXmark} size="xl" color="white" />
               </button>
+            </div>
+            <div className="flex w-full justify-center md:hidden">
+              <div className="w-1/2 mx-0.5">
+                <Image src={deckInfo.mainCard?.gameAbsolutePath || placeHolder} width={0} height={0} alt="card" sizes="60vw" style={{ width: '300px', height: 'auto' }} />
+              </div>
             </div>
             {/* <!-- Modal body -->*/}
             <div className="p-6 space-y-6 flex justify-between">
@@ -83,7 +97,7 @@ export default function ModalSaveDeck({ setShowModal, generatingDeckcode, deckIn
                   </div>
                 </div>
               </div>
-              <div className="flex">
+              <div className="md:flex hidden">
                 <div className="w-full mx-0.5">
                   <Image src={deckInfo.mainCard?.gameAbsolutePath || placeHolder} width={0} height={0} alt="card" sizes="60vw" style={{ width: '300px', height: 'auto' }} />
                 </div>
