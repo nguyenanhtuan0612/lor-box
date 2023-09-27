@@ -15,23 +15,27 @@ export class SystemService {
 
     async syncData() {
         console.time('sync');
+        const data = [
+            { set: 'set1', setName: 'Set 1' },
+            { set: 'set2', setName: 'Set 2' },
+            { set: 'set3', setName: 'Set 3' },
+            { set: 'set4', setName: 'Set 4' },
+            { set: 'set5', setName: 'Set 5' },
+            { set: 'set6', setName: 'Set 6' },
+            { set: 'setcde', setName: 'Set 6cde' },
+            { set: 'set7', setName: 'Set 7' },
+            { set: 'set7b', setName: 'Set 7b' },
+            { set: 'set8', setName: 'Set 8' },
+        ];
+
         let res = {};
-        const sync = await Promise.all([
-            this.syncCoreData(),
-            this.syncSetData('set1', 'Set 1'),
-            this.syncSetData('set2', 'Set 2'),
-            this.syncSetData('set3', 'Set 3'),
-            this.syncSetData('set4', 'Set 4'),
-            this.syncSetData('set5', 'Set 5'),
-            this.syncSetData('set6', 'Set 6'),
-            this.syncSetData('set6cde', 'Set 6cde'),
-            this.syncSetData('set7', 'Set 7'),
-            this.syncSetData('set7b', 'Set 7b'),
-            this.syncSetData('set8', 'Set 8'),
-        ]);
-        for (const iterator of sync) {
-            res = Object.assign(res, iterator);
+        const core = await this.syncCoreData();
+        res = Object.assign(res, core);
+        for (const iterator of data) {
+            const sync = await this.syncSetData(iterator.set, iterator.setName);
+            res = Object.assign(res, sync);
         }
+
         console.timeEnd('sync');
         return res;
     }
