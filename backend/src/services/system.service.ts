@@ -6,7 +6,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import decompress from 'decompress';
 import { createWriteStream, existsSync, rmSync, unlinkSync } from 'fs';
-//import cliProgress from 'cli-progress';
+import cliProgress from 'cli-progress';
 import { Card } from '@/entities/card.entity';
 
 @Injectable()
@@ -46,28 +46,28 @@ export class SystemService {
                     responseType: 'stream',
                 },
             );
-            // const progressBar = new cliProgress.SingleBar(
-            //     {
-            //         format: 'Download Core Data {bar} {percentage}% |',
-            //     },
-            //     cliProgress.Presets.shades_classic,
-            // );
-            //let receivedBytes = 0;
+            const progressBar = new cliProgress.SingleBar(
+                {
+                    format: 'Download Core Data {bar} {percentage}% |',
+                },
+                cliProgress.Presets.shades_classic,
+            );
+            let receivedBytes = 0;
             const stream = core.data;
-            //progressBar.start(core.headers['content-length'], 0);
-            // stream.on('data', (chunk: any) => {
-            //     receivedBytes += chunk.length;
-            //     progressBar.update(receivedBytes);
-            // });
+            progressBar.start(core.headers['content-length'], 0);
+            stream.on('data', (chunk: any) => {
+                receivedBytes += chunk.length;
+                progressBar.update(receivedBytes);
+            });
             stream.pipe(writer);
             await new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    //progressBar.stop();
+                    progressBar.stop();
                     resolve(true);
                 });
                 writer.on('error', () => {
                     unlinkSync('core.zip');
-                    //progressBar.stop();
+                    progressBar.stop();
                     reject();
                 });
             });
@@ -105,19 +105,19 @@ export class SystemService {
                     { where: {} },
                 ),
             ]);
-            // const progressBar = new cliProgress.SingleBar(
-            //     {
-            //         format: 'Sync Core Data {bar} {percentage}% | {value}/{total}',
-            //     },
-            //     cliProgress.Presets.shades_classic,
-            // );
-            // progressBar.start(
-            //     globalData.vocabTerms.length +
-            //         globalData.keywords.length +
-            //         globalData.regions.length +
-            //         globalData.sets.length,
-            //     0,
-            // );
+            const progressBar = new cliProgress.SingleBar(
+                {
+                    format: 'Sync Core Data {bar} {percentage}% | {value}/{total}',
+                },
+                cliProgress.Presets.shades_classic,
+            );
+            progressBar.start(
+                globalData.vocabTerms.length +
+                    globalData.keywords.length +
+                    globalData.regions.length +
+                    globalData.sets.length,
+                0,
+            );
 
             const vocabTerms = globalData.vocabTerms.map(async function (
                 itor: any,
@@ -128,7 +128,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    //progressBar.increment();
+                    progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -143,7 +143,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    //progressBar.increment();
+                    progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -156,7 +156,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    //progressBar.increment();
+                    progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -174,7 +174,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    //progressBar.increment();
+                    progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -186,7 +186,7 @@ export class SystemService {
                 ...regions,
                 ...sets,
             ]);
-            //progressBar.stop();
+            progressBar.stop();
             await Promise.all([
                 rmSync('temp/core', { recursive: true }),
                 rmSync('core.zip'),
@@ -207,28 +207,28 @@ export class SystemService {
                     responseType: 'stream',
                 },
             );
-            // const progressBar = new cliProgress.SingleBar(
-            //     {
-            //         format: `Download ${setName} Data {bar} {percentage}% |`,
-            //     },
-            //     cliProgress.Presets.shades_classic,
-            // );
-            //let receivedBytes = 0;
+            const progressBar = new cliProgress.SingleBar(
+                {
+                    format: `Download ${setName} Data {bar} {percentage}% |`,
+                },
+                cliProgress.Presets.shades_classic,
+            );
+            let receivedBytes = 0;
             const stream = file.data;
-            //progressBar.start(file.headers['content-length'], 0);
-            //stream.on('data', (chunk: any) => {
-            //receivedBytes += chunk.length;
-            //progressBar.update(receivedBytes);
-            //});
+            progressBar.start(file.headers['content-length'], 0);
+            stream.on('data', (chunk: any) => {
+                receivedBytes += chunk.length;
+                progressBar.update(receivedBytes);
+            });
             stream.pipe(writer);
             await new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    //progressBar.stop();
+                    progressBar.stop();
                     resolve(true);
                 });
                 writer.on('error', () => {
                     unlinkSync(filename);
-                    //progressBar.stop();
+                    progressBar.stop();
                     reject();
                 });
             });
@@ -251,13 +251,13 @@ export class SystemService {
                     },
                 },
             );
-            // const progressBar = new cliProgress.SingleBar(
-            //     {
-            //         format: `Sync ${setName} Data {bar} {percentage}% | {value}/{total}`,
-            //     },
-            //     cliProgress.Presets.shades_classic,
-            // );
-            // progressBar.start(data.length, 0);
+            const progressBar = new cliProgress.SingleBar(
+                {
+                    format: `Sync ${setName} Data {bar} {percentage}% | {value}/{total}`,
+                },
+                cliProgress.Presets.shades_classic,
+            );
+            progressBar.start(data.length, 0);
 
             const card = data.map(async function (itor: any) {
                 return Card.findOrCreate({
@@ -291,7 +291,7 @@ export class SystemService {
                         associatedCardRefs: itor.associatedCardRefs,
                     },
                 }).then(([data, isNew]) => {
-                    //progressBar.increment();
+                    progressBar.increment();
                     if (!isNew) {
                         return data.update({
                             cardCode: itor.cardCode,
@@ -324,7 +324,7 @@ export class SystemService {
                 });
             });
             await Promise.all(card);
-            //progressBar.stop();
+            progressBar.stop();
             await Promise.all([
                 rmSync(foldername, { recursive: true }),
                 rmSync(filename),
