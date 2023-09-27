@@ -22,7 +22,7 @@ export class SystemService {
             { set: 'set4', setName: 'Set 4' },
             { set: 'set5', setName: 'Set 5' },
             { set: 'set6', setName: 'Set 6' },
-            { set: 'setcde', setName: 'Set 6cde' },
+            { set: 'set6cde', setName: 'Set 6cde' },
             { set: 'set7', setName: 'Set 7' },
             { set: 'set7b', setName: 'Set 7b' },
             { set: 'set8', setName: 'Set 8' },
