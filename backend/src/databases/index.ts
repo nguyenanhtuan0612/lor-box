@@ -22,7 +22,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
                     timeout: 8000,
                 },
                 pool: {
-                    acquire: 50000, // i also tried 50000
+                    acquire: 100000,
                 },
                 models: entities,
                 hooks: {
