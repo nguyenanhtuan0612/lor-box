@@ -6,7 +6,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import decompress from 'decompress';
 import { createWriteStream, existsSync, rmSync, unlinkSync } from 'fs';
-import cliProgress from 'cli-progress';
+//import cliProgress from 'cli-progress';
 import { Card } from '@/entities/card.entity';
 
 @Injectable()
@@ -27,6 +27,7 @@ export class SystemService {
             this.syncSetData('set6cde', 'Set 6cde'),
             this.syncSetData('set7', 'Set 7'),
             this.syncSetData('set7b', 'Set 7b'),
+            this.syncSetData('set8', 'Set 8'),
         ]);
         for (const iterator of sync) {
             res = Object.assign(res, iterator);
@@ -45,28 +46,28 @@ export class SystemService {
                     responseType: 'stream',
                 },
             );
-            const progressBar = new cliProgress.SingleBar(
-                {
-                    format: 'Download Core Data {bar} {percentage}% |',
-                },
-                cliProgress.Presets.shades_classic,
-            );
-            let receivedBytes = 0;
+            // const progressBar = new cliProgress.SingleBar(
+            //     {
+            //         format: 'Download Core Data {bar} {percentage}% |',
+            //     },
+            //     cliProgress.Presets.shades_classic,
+            // );
+            //let receivedBytes = 0;
             const stream = core.data;
-            progressBar.start(core.headers['content-length'], 0);
-            stream.on('data', (chunk: any) => {
-                receivedBytes += chunk.length;
-                progressBar.update(receivedBytes);
-            });
+            //progressBar.start(core.headers['content-length'], 0);
+            // stream.on('data', (chunk: any) => {
+            //     receivedBytes += chunk.length;
+            //     progressBar.update(receivedBytes);
+            // });
             stream.pipe(writer);
             await new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    progressBar.stop();
+                    //progressBar.stop();
                     resolve(true);
                 });
                 writer.on('error', () => {
                     unlinkSync('core.zip');
-                    progressBar.stop();
+                    //progressBar.stop();
                     reject();
                 });
             });
@@ -104,19 +105,19 @@ export class SystemService {
                     { where: {} },
                 ),
             ]);
-            const progressBar = new cliProgress.SingleBar(
-                {
-                    format: 'Sync Core Data {bar} {percentage}% | {value}/{total}',
-                },
-                cliProgress.Presets.shades_classic,
-            );
-            progressBar.start(
-                globalData.vocabTerms.length +
-                    globalData.keywords.length +
-                    globalData.regions.length +
-                    globalData.sets.length,
-                0,
-            );
+            // const progressBar = new cliProgress.SingleBar(
+            //     {
+            //         format: 'Sync Core Data {bar} {percentage}% | {value}/{total}',
+            //     },
+            //     cliProgress.Presets.shades_classic,
+            // );
+            // progressBar.start(
+            //     globalData.vocabTerms.length +
+            //         globalData.keywords.length +
+            //         globalData.regions.length +
+            //         globalData.sets.length,
+            //     0,
+            // );
 
             const vocabTerms = globalData.vocabTerms.map(async function (
                 itor: any,
@@ -127,7 +128,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    progressBar.increment();
+                    //progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -142,7 +143,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    progressBar.increment();
+                    //progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -155,7 +156,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    progressBar.increment();
+                    //progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -173,7 +174,7 @@ export class SystemService {
                     },
                     defaults: itor,
                 }).then(([data, isNew]) => {
-                    progressBar.increment();
+                    //progressBar.increment();
                     if (!isNew) {
                         return data.update({ active: true });
                     }
@@ -185,7 +186,7 @@ export class SystemService {
                 ...regions,
                 ...sets,
             ]);
-            progressBar.stop();
+            //progressBar.stop();
             await Promise.all([
                 rmSync('temp/core', { recursive: true }),
                 rmSync('core.zip'),
@@ -206,28 +207,28 @@ export class SystemService {
                     responseType: 'stream',
                 },
             );
-            const progressBar = new cliProgress.SingleBar(
-                {
-                    format: `Download ${setName} Data {bar} {percentage}% |`,
-                },
-                cliProgress.Presets.shades_classic,
-            );
-            let receivedBytes = 0;
+            // const progressBar = new cliProgress.SingleBar(
+            //     {
+            //         format: `Download ${setName} Data {bar} {percentage}% |`,
+            //     },
+            //     cliProgress.Presets.shades_classic,
+            // );
+            //let receivedBytes = 0;
             const stream = file.data;
-            progressBar.start(file.headers['content-length'], 0);
-            stream.on('data', (chunk: any) => {
-                receivedBytes += chunk.length;
-                progressBar.update(receivedBytes);
-            });
+            //progressBar.start(file.headers['content-length'], 0);
+            //stream.on('data', (chunk: any) => {
+            //receivedBytes += chunk.length;
+            //progressBar.update(receivedBytes);
+            //});
             stream.pipe(writer);
             await new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    progressBar.stop();
+                    //progressBar.stop();
                     resolve(true);
                 });
                 writer.on('error', () => {
                     unlinkSync(filename);
-                    progressBar.stop();
+                    //progressBar.stop();
                     reject();
                 });
             });
@@ -250,13 +251,13 @@ export class SystemService {
                     },
                 },
             );
-            const progressBar = new cliProgress.SingleBar(
-                {
-                    format: `Sync ${setName} Data {bar} {percentage}% | {value}/{total}`,
-                },
-                cliProgress.Presets.shades_classic,
-            );
-            progressBar.start(data.length, 0);
+            // const progressBar = new cliProgress.SingleBar(
+            //     {
+            //         format: `Sync ${setName} Data {bar} {percentage}% | {value}/{total}`,
+            //     },
+            //     cliProgress.Presets.shades_classic,
+            // );
+            // progressBar.start(data.length, 0);
 
             const card = data.map(async function (itor: any) {
                 return Card.findOrCreate({
@@ -290,14 +291,40 @@ export class SystemService {
                         associatedCardRefs: itor.associatedCardRefs,
                     },
                 }).then(([data, isNew]) => {
-                    progressBar.increment();
+                    //progressBar.increment();
                     if (!isNew) {
-                        return data.update({ active: true });
+                        return data.update({
+                            cardCode: itor.cardCode,
+                            name: itor.name,
+                            type: itor.type,
+                            subtypes: itor.subtypes,
+                            gameAbsolutePath:
+                                itor.assets[0]?.gameAbsolutePath || null,
+                            fullAbsolutePath:
+                                itor.assets[0]?.fullAbsolutePath || null,
+                            regionRefs: itor.regionRefs,
+                            attack: itor.attack,
+                            health: itor.health,
+                            cost: itor.cost,
+                            description: itor.description,
+                            descriptionRaw: itor.descriptionRaw,
+                            levelupDescription: itor.levelupDescription,
+                            levelupDescriptionRaw: itor.levelupDescriptionRaw,
+                            keywordRefs: itor.keywordRefs,
+                            spellSpeedRef: itor.spellSpeedRef,
+                            rarityRef: itor.rarityRef,
+                            collectible: itor.collectible,
+                            gameSet: itor.set,
+                            formatRefs: itor.formatRefs,
+                            flavorText: itor.flavorText,
+                            associatedCardRefs: itor.associatedCardRefs,
+                            active: true,
+                        });
                     }
                 });
             });
             await Promise.all(card);
-            progressBar.stop();
+            //progressBar.stop();
             await Promise.all([
                 rmSync(foldername, { recursive: true }),
                 rmSync(filename),
