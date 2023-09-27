@@ -21,6 +21,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
                 dialectOptions: {
                     timeout: 8000,
                 },
+                pool: {
+                    acquire: 50000, // i also tried 50000
+                },
                 models: entities,
                 hooks: {
                     beforeCount: function (options: any) {
