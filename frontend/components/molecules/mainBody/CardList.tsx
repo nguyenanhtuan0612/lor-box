@@ -137,7 +137,7 @@ export default function CardList(props: Props) {
           {cards.map((data, i) => {
             return (
               <Card
-                key={i}
+                key={data.id}
                 card={data}
                 deck={props.deck}
                 setDeck={props.setDeck}

@@ -24,6 +24,7 @@ interface Props {
 
 export default function Card(props: Props) {
   const [numInDeck, setNumInDeck] = useState(0);
+  const [load, setLoad] = useState(false);
 
   useEffect(() => {
     const arr = props.deck;
@@ -314,7 +315,7 @@ export default function Card(props: Props) {
               handleClickAddCard();
             }
           }}
-          src={props.card?.gameAbsolutePath}
+          src={load ? props.card?.gameAbsolutePath : placeHolder}
           className={checkCanAdd() ? `hover:scale-105 hover:cursor-pointer` : 'opacity-50'}
           width={0}
           height={0}
@@ -322,6 +323,9 @@ export default function Card(props: Props) {
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
           placeholder="blur"
+          onLoad={() => {
+            setLoad(true);
+          }}
           blurDataURL="/img/card-placeholder.png"
         />
       </div>

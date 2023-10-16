@@ -599,12 +599,12 @@ video {
   z-index: 20;
 }
 
-.z-50 {
-  z-index: 50;
-}
-
 .z-40 {
   z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
 }
 
 .float-right {
@@ -769,10 +769,6 @@ video {
 
 .h-full {
   height: 100%;
-}
-
-.h-1\/2 {
-  height: 50%;
 }
 
 .w-0 {
@@ -1056,6 +1052,11 @@ video {
   border-color: rgb(234 179 8 / var(--tw-border-opacity));
 }
 
+.border-red-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
+}
+
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
@@ -1097,6 +1098,10 @@ video {
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
+.bg-gray-800\/\[\.4\] {
+  background-color: rgb(31 41 55 / .4);
+}
+
 .bg-gray-800\/\[\.5\] {
   background-color: rgb(31 41 55 / .5);
 }
@@ -1125,10 +1130,6 @@ video {
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
-}
-
-.bg-gray-800\/\[\.4\] {
-  background-color: rgb(31 41 55 / .4);
 }
 
 .bg-\[url\(\'https\:\/\/dd\.b\.pvp\.net\/4_7_0\/set1\/vi_vn\/img\/cards\/01DE012T1-full\.png\'\)\] {
@@ -1295,6 +1296,11 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400::-moz-placeholder {
@@ -1515,6 +1521,11 @@ body {
     border-color: rgb(55 65 81 / var(--tw-border-opacity));
   }
 
+  .dark\:border-red-500 {
+    --tw-border-opacity: 1;
+    border-color: rgb(239 68 68 / var(--tw-border-opacity));
+  }
+
   .dark\:text-blue-500 {
     --tw-text-opacity: 1;
     color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -1523,6 +1534,11 @@ body {
   .dark\:text-gray-400 {
     --tw-text-opacity: 1;
     color: rgb(156 163 175 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-red-500 {
+    --tw-text-opacity: 1;
+    color: rgb(239 68 68 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:text-gray-300:hover {
